@@ -3,12 +3,19 @@ services:
     build: ToListApp
     ports:
       - "90:90"
-  app:
-    build: .
+    depends_on:
+      - postgres
     environment:
-      - DB_URL=postgresql://${PG_USER}:${PG_PASSWORD}@${PG_HOST}:${PG_PORT}/${PG_DATABASE}
-      - PG_USER=postgres
-      - PG_PASSWORD=postgres
-      - PG_HOST=localhost
-      - PG_PORT=5432
-      - PG_DATABASE=postgres
+      - DB_URL=postgresql://${PG_USER}:${PG_PASSWORD}@postgres:5432/${PG_DATABASE}
+
+  postgres:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: ${PG_USER}
+      POSTGRES_PASSWORD: ${PG_PASSWORD}
+      POSTGRES_DB: ${PG_DATABASE}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:

@@ -7,11 +7,11 @@ RUN pip install -r requirements.txt
 
 COPY . .
 
-VOLUME [ "/app/data" ]
+
 
 ENV PYTHONUNBUFFERED=1
 
-#ENV DB_URL="postgresql://postgres:postgres@localhost:5432/postgres"
-ENV DB_URL="postgresql://postgres:postgres@localhost:5432/postgres"
+
+ENV DB_URL="postgresql://${PG_USER}:${PG_PASSWORD}@postgres:5432/${PG_DATABASE}"
 
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "90"]
