@@ -8,7 +8,7 @@ from app.utils.utils import get_db
 router = APIRouter(prefix="/items",tags=["items"])
 @router.post("/")
 async def crete_items(item:ModelCreateRequest,db:Session=Depends(get_db))->ModelResponse:
-    new_model = Item(**item.dict())
+    new_model = Item(**item.model_dump())
     new_model.id = uuid.uuid4()
     db.add(new_model)
     db.commit()
@@ -25,7 +25,7 @@ async def get_model(mode_id:uuid.UUID,db:Session=Depends(get_db))->ModelResponse
         raise HTTPException(status_code=404,detail="Not items")
     return model
 @router.put("/{items_id}")
-async def udate_model(mode_id:uuid.UUID,model_udate:ModelUdateReqest,db:Session=Depends(get_db))->ModelResponse:
+async def update_model(mode_id:uuid.UUID,model_udate:ModelUdateReqest,db:Session=Depends(get_db))->ModelResponse:
     model = db.query(Item).filter(Item.id==mode_id).first()
     if not model:
         raise HTTPException(status_code=404,detail="Not items")
